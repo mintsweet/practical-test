@@ -1,0 +1,30 @@
+{
+  "private": true,
+  "name": "practical-test",
+  "packageManager": "yarn@4.6.0",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "prettier": "prettier . --write",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@mints/eslint-config": "^1.0.2",
+    "eslint": "8.57.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.1",
+    "prettier": "^3.4.2"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{html,json,md}": [
+      "prettier --write"
+    ]
+  }
+}
