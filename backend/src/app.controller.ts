@@ -1,4 +1,11 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller()
 export class AppController {
@@ -6,6 +13,14 @@ export class AppController {
   wecome() {
     return {
       message: 'Welcome to our service.',
+    };
+  }
+
+  @Post('upload-and-extract')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadAndExtract(@UploadedFile() file: Express.Multer.File) {
+    return {
+      fileName: file.filename,
     };
   }
 }
