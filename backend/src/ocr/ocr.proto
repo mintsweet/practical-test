@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package ocr;
+
+service OcrService {
+  rpc ProcessImage (ProcessImageRequest) returns (ProcessImageResponse);
+}
+
+message ProcessImageRequest {
+  bytes file = 1;
+  string language = 2;
+}
+
+message ProcessImageResponse {
+  string parsedText = 1;
+  string errorMessage = 2;
+  bool isErrored = 3;
+}
