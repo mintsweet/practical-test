@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { OcrController } from './orc.controller';
 
 @Module({
-  imports: [],
+  imports: [ConfigModule.forRoot()],
   controllers: [OcrController],
-  providers: [],
+  providers: [ConfigService],
 })
 export class OcrModule {}

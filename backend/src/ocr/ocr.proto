@@ -7,12 +7,44 @@ service OcrService {
 }
 
 message ProcessImageRequest {
-  bytes file = 1;
+  string fileName = 1;
   string language = 2;
 }
 
+message Word {
+  string WordText = 1;
+  int32 Left = 2;
+  int32 Top = 3;
+  int32 Height = 4;
+  int32 Width = 5;
+}
+
+message Line {
+  string LineText = 1;
+  repeated Word Words = 2;
+  int32 MaxHeight = 3;
+  int32 MinTop = 4;
+}
+
+message TextOverlay {
+  repeated Line Lines = 1;
+  bool HasOverlay = 2;
+  string Message = 3;
+}
+
+message ParsedResult {
+  TextOverlay TextOverlay = 1;
+  string TextOrientation = 2;
+  int32 FileParseExitCode = 3;
+  string ParsedText = 4;
+  string ErrorMessage = 5;
+  string ErrorDetails = 6;
+}
+
 message ProcessImageResponse {
-  string parsedText = 1;
-  string errorMessage = 2;
-  bool isErrored = 3;
+  repeated ParsedResult ParsedResults = 1;
+  int32 OCRExitCode = 2;
+  bool IsErroredOnProcessing = 3;
+  string ProcessingTimeInMilliseconds = 4;
+  string SearchablePDFURL = 5;
 }
