@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "prettier": "prettier . --write",
     "prepare": "husky",
-    "start:backend": "yarn workspace backend start:dev"
+    "start:backend": "yarn workspace backend start:dev",
+    "start:frontend": "yarn workspace frontend dev"
   },
   "devDependencies": {
     "@mints/eslint-config": "^1.0.2",
