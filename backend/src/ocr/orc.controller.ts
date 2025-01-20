@@ -28,7 +28,11 @@ export class OcrController {
     const filePath = path.join(UPLOAD_DIR, fileName);
 
     if (!fs.existsSync(filePath)) {
-      throw new Error('Cannot find this file');
+      return {
+        isError: true,
+        errorMsg: 'Cannot find this file',
+        lines: [],
+      };
     }
 
     try {
@@ -44,9 +48,36 @@ export class OcrController {
         },
       });
 
-      return response.data;
+      if ([2, 3, 4].includes(response.data.OCRExitCode)) {
+        return {
+          isError: true,
+          errorMsg: response.data.ErrorMessage,
+          lines: [],
+        };
+      }
+
+      return {
+        isError: false,
+        errorMsg: '',
+        lines: response.data.ParsedResults[0].TextOverlay.Lines.map((line) => ({
+          text: line.LineText,
+          minTop: line.MinTop,
+          maxHeight: line.MaxHeight,
+          words: line.Words.map((word) => ({
+            text: word.WordText,
+            top: word.Top,
+            left: word.Left,
+            width: word.Width,
+            height: word.Height,
+          })),
+        })),
+      };
     } catch (error) {
-      throw new Error(error);
+      return {
+        isError: true,
+        errorMsg: error.message,
+        lines: [],
+      };
     }
   }
 }
