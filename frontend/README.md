@@ -1,50 +1,62 @@
-# React + TypeScript + Vite
+# Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+This is the frontend of the project, built with **React**, **TypeScript**, **Vite.js**, and **TailwindCSS**. It supports functionalities for uploading images and selecting content within uploaded images.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **Image Upload**: Easily upload images for processing.
+- **Content Selection**: Select specific content areas within uploaded images for further actions.
+- **Fast Development Setup**: Built with modern tools for rapid development and performance.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Project Structure
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+```
+frontend/
+├── src/              # Source code
+├── public/           # Static assets
+├── .env.example      # Example environment variables
+├── package.json      # Project dependencies
+└── vite.config.ts    # Vite configuration
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Installation
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react';
+Make sure you have Node.js and Yarn installed.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-});
+```bash
+# Install dependencies
+yarn install
 ```
+
+## Development
+
+```bash
+cd frontend
+cp .env.example .env
+yarn dev
+```
+
+The frontend will be available at `http://localhost:5173` (default port).
+
+## Environment Variables
+
+Ensure the following environment variables are defined in the `.env` file:
+
+```
+# API URL
+X_API_URL=http://localhost:3000
+
+# Static resource access path
+X_STATIC=http://localhost:3000/static
+```
+
+## Build
+
+```bash
+# Build the production bundle
+yarn build
+```
+
+The built files will be available in the `dist` directory.
