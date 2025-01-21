@@ -11,8 +11,23 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Observable, lastValueFrom } from 'rxjs';
 
-interface OcrService {
-  ProcessImage(data: { fileName: string; language?: string }): Observable<{}>;
+export interface OcrService {
+  ProcessImage(payload: { fileName: string; language?: string }): Observable<{
+    lines: Array<{
+      text: string;
+      minTop: number;
+      minHeight: number;
+      words: Array<{
+        text: string;
+        top: number;
+        left: number;
+        width: number;
+        height: number;
+      }>;
+    }>;
+    isError: boolean;
+    errorMsg: string;
+  }>;
 }
 
 @Controller()
