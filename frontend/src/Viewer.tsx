@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 
+import type { ILine } from './types';
 import { getWordPosition, checkWordInArea } from './utils';
 
 const customWidth = 500;
@@ -10,10 +11,10 @@ interface Props {
     width: number;
     height: number;
   };
-  data: any;
+  lines: ILine[];
 }
 
-export const Viewer = ({ url, imgSize, data }: Props) => {
+export const Viewer = ({ url, imgSize, lines }: Props) => {
   const [selecting, setSelecting] = useState(false);
   const [selectionBox, setSelectionBox] = useState<{
     startX: number;
@@ -66,15 +67,10 @@ export const Viewer = ({ url, imgSize, data }: Props) => {
 
     const selected: string[] = [];
 
-    data.ParsedResults[0].TextOverlay.Lines.forEach((line: any) => {
-      line.Words.forEach((word: any) => {
+    lines.forEach((line) => {
+      line.words.forEach((word) => {
         const isInArea = checkWordInArea({
-          word: {
-            top: word.Top,
-            left: word.Left,
-            width: word.Width,
-            height: word.Height,
-          },
+          word,
           imgSize,
           customWidth,
           area: selectionBox,
@@ -82,7 +78,7 @@ export const Viewer = ({ url, imgSize, data }: Props) => {
         });
 
         if (isInArea) {
-          selected.push(word.WordText);
+          selected.push(word.text);
         }
       });
     });
@@ -173,15 +169,10 @@ export const Viewer = ({ url, imgSize, data }: Props) => {
             }}
           />
 
-          {data.ParsedResults[0].TextOverlay.Lines.map((line: any) =>
-            line.Words.map((word: any, index: number) => {
+          {lines.map((line) =>
+            line.words.map((word, index: number) => {
               const { left, top, width, height } = getWordPosition({
-                word: {
-                  top: word.Top,
-                  left: word.Left,
-                  width: word.Width,
-                  height: word.Height,
-                },
+                word,
                 imgSize,
                 customWidth,
                 scale,
@@ -189,12 +180,7 @@ export const Viewer = ({ url, imgSize, data }: Props) => {
               const isInArea =
                 selectionBox &&
                 checkWordInArea({
-                  word: {
-                    top: word.Top,
-                    left: word.Left,
-                    width: word.Width,
-                    height: word.Height,
-                  },
+                  word,
                   imgSize,
                   customWidth,
                   area: selectionBox,

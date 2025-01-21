@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import data from './data';
+import type { ILine } from './types';
 import { Viewer } from './Viewer';
 
 const prefix = import.meta.env.X_STATIC;
@@ -28,6 +28,7 @@ function App() {
   >('idle');
   const [fileUrl, setFileUrl] = useState<string>();
   const [imgSize, setImgSize] = useState<{ width: number; height: number }>();
+  const [lines, setLines] = useState<ILine[]>([]);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (status !== 'idle' || !e.target.files) {
@@ -40,16 +41,20 @@ function App() {
       const formData = new FormData();
       formData.append('file', e.target.files[0]);
 
-      const fileUrl = await fetch('/api/upload-and-extract', {
+      const { fileUrl, lines } = await fetch('/api/upload-and-extract', {
         method: 'POST',
         body: formData,
       })
         .then((res) => res.json())
-        .then((data) => `${prefix}/${data.fileName}`);
+        .then((data) => ({
+          fileUrl: `${prefix}/${data.fileName}`,
+          lines: data.lines,
+        }));
       const size = await getOriginalImageSize(fileUrl);
 
       setFileUrl(fileUrl);
       setImgSize(size);
+      setLines(lines);
       setStatus('success');
     } catch {
       setStatus('error');
@@ -112,7 +117,7 @@ function App() {
         </>
       )}
       {status === 'success' && fileUrl && imgSize && (
-        <Viewer url={fileUrl} data={data} imgSize={imgSize} />
+        <Viewer url={fileUrl} lines={lines} imgSize={imgSize} />
       )}
     </div>
   );
