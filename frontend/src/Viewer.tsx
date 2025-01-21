@@ -19,29 +19,37 @@ export const Viewer = ({ url, imgSize, lines }: Props) => {
   const [selectionBox, setSelectionBox] = useState<{
     startX: number;
     startY: number;
+    endX: number;
+    endY: number;
     width: number;
     height: number;
+    reverse: boolean;
   } | null>(null);
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
 
   const [scale, setScale] = useState(1);
 
   const rafRef = useRef<number>(0);
+  const imgRef = useRef(null);
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
     setSelecting(true);
     const { offsetX, offsetY } = e.nativeEvent;
 
     setSelectionBox({
       startX: offsetX * scale,
       startY: offsetY * scale,
+      endX: offsetX * scale,
+      endY: offsetY * scale,
       width: 0,
       height: 0,
+      reverse: false,
     });
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
+    e.preventDefault();
 
     if (!selecting) return;
 
@@ -50,10 +58,18 @@ export const Viewer = ({ url, imgSize, lines }: Props) => {
       if (!selectionBox) return;
 
       const { offsetX, offsetY } = e.nativeEvent;
+
+      if (e.target !== imgRef.current) {
+        return;
+      }
+
       setSelectionBox({
         ...selectionBox,
-        width: offsetX * scale - selectionBox.startX,
-        height: offsetY * scale - selectionBox.startY,
+        endX: offsetX * scale,
+        endY: offsetY * scale,
+        width: Math.abs(offsetX * scale - selectionBox.startX),
+        height: Math.abs(offsetY * scale - selectionBox.startY),
+        reverse: offsetX * scale < selectionBox.startX,
       });
     });
   };
@@ -73,7 +89,16 @@ export const Viewer = ({ url, imgSize, lines }: Props) => {
           word,
           imgSize,
           customWidth,
-          area: selectionBox,
+          area: {
+            left: !selectionBox.reverse
+              ? selectionBox.startX
+              : selectionBox.endX,
+            top: !selectionBox.reverse
+              ? selectionBox.startY
+              : selectionBox.endY,
+            width: selectionBox.width,
+            height: selectionBox.height,
+          },
           scale,
         });
 
@@ -121,8 +146,8 @@ export const Viewer = ({ url, imgSize, lines }: Props) => {
             <div
               className="absolute border-2 border-indigo-500 bg-indigo-500/20 z-50"
               style={{
-                left: `${selectionBox.startX}px`,
-                top: `${selectionBox.startY}px`,
+                top: `${!selectionBox.reverse ? selectionBox.startY : selectionBox.endY}px`,
+                left: `${!selectionBox.reverse ? selectionBox.startX : selectionBox.endX}px`,
                 width: `${selectionBox.width}px`,
                 height: `${selectionBox.height}px`,
               }}
@@ -132,14 +157,14 @@ export const Viewer = ({ url, imgSize, lines }: Props) => {
             <div
               className="absolute border border-blue-400 bg-white z-40"
               style={{
-                left: `${selectionBox.startX}px`,
-                top: `${selectionBox.startY + selectionBox.height}px`,
+                left: `${!selectionBox.reverse ? selectionBox.startX : selectionBox.endX}px`,
+                top: `${(!selectionBox.reverse ? selectionBox.startY : selectionBox.endY) + selectionBox.height}px`,
               }}
             >
               {selectedWords.join(' ')}
             </div>
           )}
-          <div className="absolute top-2 left-2 z-30 bg-slate-600/50">
+          <div className="absolute top-2 left-2 z-30 bg-slate-700 text-white">
             <ul className="flex">
               <li
                 title="Zoom In"
@@ -158,6 +183,7 @@ export const Viewer = ({ url, imgSize, lines }: Props) => {
             </ul>
           </div>
           <div
+            ref={imgRef}
             style={{
               backgroundImage: `url(${url})`,
               width: '100%',
@@ -183,7 +209,16 @@ export const Viewer = ({ url, imgSize, lines }: Props) => {
                   word,
                   imgSize,
                   customWidth,
-                  area: selectionBox,
+                  area: {
+                    left: !selectionBox.reverse
+                      ? selectionBox.startX
+                      : selectionBox.endX,
+                    top: !selectionBox.reverse
+                      ? selectionBox.startY
+                      : selectionBox.endY,
+                    width: selectionBox.width,
+                    height: selectionBox.height,
+                  },
                 });
               return (
                 <div

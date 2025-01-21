@@ -49,8 +49,8 @@ export const checkWordInArea = ({
   };
   customWidth: number;
   area: {
-    startX: number;
-    startY: number;
+    top: number;
+    left: number;
     width: number;
     height: number;
   };
@@ -62,15 +62,10 @@ export const checkWordInArea = ({
     customWidth,
     scale,
   });
-  const endX = area.startX + area.width;
-  const endY = area.startY + area.height;
+  const endX = area.left + area.width;
+  const endY = area.top + area.height;
 
-  if (
-    top < endY &&
-    right >= area.startX &&
-    bottom >= area.startY &&
-    left <= endX
-  ) {
+  if (top < endY && right >= area.left && bottom >= area.top && left <= endX) {
     return true;
   }
 
