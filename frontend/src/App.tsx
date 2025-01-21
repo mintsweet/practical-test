@@ -61,9 +61,26 @@ function App() {
     }
   };
 
+  const handleReset = () => {
+    setStatus('idle');
+    setFileUrl(undefined);
+    setImgSize(undefined);
+    setLines([]);
+  };
+
   return (
     <div className="flex flex-col container mx-auto min-h-screen">
-      <h1 className="flex items-center h-16 text-3xl font-bold">Xtracta</h1>
+      <div className="flex items-center justify-between h-16">
+        <h1 className="text-3xl font-bold">Xtracta</h1>
+        {status === 'success' && (
+          <span
+            className="text-lg text-red-500 cursor-pointer"
+            onClick={handleReset}
+          >
+            Reset
+          </span>
+        )}
+      </div>
       {['idle', 'uploading'].includes(status) && (
         <>
           <label htmlFor="upload" className="block mt-10 w-1/2 mx-auto">
