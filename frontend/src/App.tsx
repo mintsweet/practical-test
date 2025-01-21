@@ -62,8 +62,8 @@ function App() {
   };
 
   return (
-    <div className="container mx-auto h-screen">
-      <h1 className="py-4 text-3xl font-bold">Xtracta</h1>
+    <div className="flex flex-col container mx-auto min-h-screen">
+      <h1 className="flex items-center h-16 text-3xl font-bold">Xtracta</h1>
       {['idle', 'uploading'].includes(status) && (
         <>
           <label htmlFor="upload" className="block mt-10 w-1/2 mx-auto">

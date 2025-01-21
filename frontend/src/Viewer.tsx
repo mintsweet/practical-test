@@ -204,7 +204,7 @@ export const Viewer = ({ url, imgSize, lines }: Props) => {
         </div>
       </div>
       <div className="hidden md:block">
-        <div className="p-6 bg-white">
+        <div className="min-w-80 p-6 bg-white">
           <h3 className="mb-2 text-xl">Textarea</h3>
           <textarea
             rows={4}
