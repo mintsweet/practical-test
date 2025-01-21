@@ -26,7 +26,7 @@ export class AppController implements OnModuleInit {
   }
 
   @Get()
-  wecome() {
+  welcome() {
     return {
       message: 'Welcome to our service.',
     };
